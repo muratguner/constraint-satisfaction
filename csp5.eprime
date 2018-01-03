@@ -1,0 +1,71 @@
+language ESSENCE' 1.0
+letting NBOFPEOPLE be 8
+letting NBOFPRESENTS be 4
+
+$ Decision variables x_ij  = { 1 , if present i is bought for person j
+$                               0 , otherwise}
+$                , where i = (1..4)
+$                        j = (1..8)
+
+
+find x : matrix indexed by [int(1..NBOFPRESENTS), int(1..NBOFPEOPLE)] of int(0..1)
+$ Cost of presents : C = [CD, Socks, Chocolates, Mill]
+
+letting C = [10, 7, 4, 12]
+
+$Given constraints of the model
+
+$ Each person must get exactly one present
+such that
+forAll j : int(1..NBOFPEOPLE) .
+((sum i : int(1..NBOFPRESENTS) . x[i,j]) = 1),
+
+$ Your mum, brother, and significant other must get different presents
+
+forAll i : int(1..NBOFPRESENTS) . (x[i,1]+x[i,2]+x[i,8]=1) \/ (x[i,1]+x[i,2]+x[i,8]=0),
+
+$ Your uncle and cousin must get different presents
+
+forAll i : int(1..NBOFPRESENTS) . (x[i,5]+x[i,7] = 1) \/ (x[i,5]+x[i,7] = 0),
+
+$ Your grandparents must get different presents
+
+forAll i : int(1..NBOFPRESENTS) . (x[i,3]+x[i,4] = 1) \/ (x[i,3]+x[i,4] = 0),
+
+
+$ Your mum and uncle must get different presents
+
+forAll i : int(1..NBOFPRESENTS) . (x[i,1]+x[i,7] = 1) \/ (x[i,1]+x[i,7] = 0),
+
+$ You cannot get chocolates for your mum, brother, significant other, or grandpa
+
+x[3,1] = 0,
+x[3,2] = 0,
+x[3,8] = 0,
+x[3,4] = 0,
+
+
+$ Your cousin must not get socks
+
+x[2,5] = 0,
+
+$ There is only one coffee mill in the shop
+
+(sum j: int(1..NBOFPEOPLE) . x[4,j]) = 1,
+
+$ There are no more than 2 CDs in the shop
+
+(sum j: int(1..NBOFPEOPLE) . x[1,j]) <=2,
+
+$ There are no more than 4 boxes of chocolates in the shop
+
+(sum j: int(1..NBOFPEOPLE) . x[3,j]) <=4,
+
+$ Your brother must get a CD
+
+x[1,2] = 1
+
+
+
+
+
